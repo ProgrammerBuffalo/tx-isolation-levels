@@ -33,4 +33,5 @@ build/
 .vscode/
 
 mysql-data/
+postgres-data/
 .DS_Store
