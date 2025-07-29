@@ -1,23 +1,29 @@
 package az.eldareyvazov.transactionisolations.persistence;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NonNull
     private String username;
-    private Integer money;
+
+    @NonNull
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @Override
     public String toString() {
-        return String.format("id: %d, username: %s, money: %d", id, username, money);
+        return String.format("id: %d, username: %s, isActive: %b", id, username, isActive);
     }
 }

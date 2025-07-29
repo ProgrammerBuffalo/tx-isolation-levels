@@ -1,7 +1,7 @@
 package az.eldareyvazov.transactionisolations;
 
-import az.eldareyvazov.transactionisolations.levels.ReadCommittedLevel;
-import az.eldareyvazov.transactionisolations.levels.ReadUncommittedLevel;
+import az.eldareyvazov.transactionisolations.anomaly.NonRepeatableReadAnomaly;
+import az.eldareyvazov.transactionisolations.anomaly.DirtyReadAnomaly;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,19 +11,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class EntryPointController {
 
-    private final ReadUncommittedLevel readUncommittedLevel;
+    private final DirtyReadAnomaly dirtyReadAnomaly;
 
-    private final ReadCommittedLevel readCommittedLevel;
+    private final NonRepeatableReadAnomaly nonRepeatableReadAnomaly;
 
-    @PostMapping("start-read-uncommitted")
-    public ResponseEntity<?> startUncommittedLevel() {
-        readUncommittedLevel.runDBOperation();
+    @PostMapping("dirty-read")
+    public ResponseEntity<?> startDirtyRead() {
+        dirtyReadAnomaly.runWithAnomaly();
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("start-read-committed")
-    public ResponseEntity<?> startCommittedLevel() {
-        readCommittedLevel.runDBOperation();
+    @PostMapping("dirty-read-resolved")
+    public ResponseEntity<?> startDirtyReadResolved() {
+        dirtyReadAnomaly.runWithAnomalyResolved();
         return ResponseEntity.accepted().build();
     }
+
+    @PostMapping("non-repeatable-read")
+    public ResponseEntity<?> startNonRepeatableRead() {
+        nonRepeatableReadAnomaly.runWithAnomaly();
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("non-repeatable-read-resolved")
+    public ResponseEntity<?> startNonRepeatableReadResolved() {
+        nonRepeatableReadAnomaly.runWithAnomalyResolved();
+        return ResponseEntity.accepted().build();
+    }
+
 }
